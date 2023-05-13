@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class InvoiceItem extends Model
 {
     use HasFactory;
+
+    protected $fillable = ['invoice_id', 'description', 'amount'];
+
+    // An invoice item belongs to an invoice
+    public function invoice() {
+        return $this->belongsTo(Invoice::class);
+    }
 }

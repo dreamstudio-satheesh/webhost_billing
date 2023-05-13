@@ -3,62 +3,66 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\HostingPackage;
 
 class HostingPackageController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $hostingPackages = HostingPackage::all();
+        return view('hostingPackages.index', compact('hostingPackages'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        return view('hostingPackages.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        //
+        // validate request data
+        $request->validate([
+            'name' => 'required|max:255',
+            'description' => 'required',
+            'price' => 'required|numeric',
+            // add validations for other fields
+        ]);
+
+        // create a new hosting package
+        $hostingPackage = HostingPackage::create($request->all());
+
+        return redirect()->route('hostingPackages.show', $hostingPackage);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(HostingPackage $hostingPackage)
     {
-        //
+        return view('hostingPackages.show', compact('hostingPackage'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function edit(HostingPackage $hostingPackage)
     {
-        //
+        return view('hostingPackages.edit', compact('hostingPackage'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(Request $request, HostingPackage $hostingPackage)
     {
-        //
+        // validate request data
+        $request->validate([
+            'name' => 'required|max:255',
+            'description' => 'required',
+            'price' => 'required|numeric',
+            // add validations for other fields
+        ]);
+
+        // update the hosting package
+        $hostingPackage->update($request->all());
+
+        return redirect()->route('hostingPackages.show', $hostingPackage);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(HostingPackage $hostingPackage)
     {
-        //
+        $hostingPackage->delete();
+        return redirect()->route('hostingPackages.index');
     }
 }
